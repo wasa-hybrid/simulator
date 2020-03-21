@@ -60,7 +60,7 @@ def main():
 
     body = engine
 
-    t_max = 40.0
+    t_max = 100.
     dt = 0.1
 
     # ts = np.arange(0.0, t_max, dt)
@@ -69,8 +69,6 @@ def main():
     env    = Environment()
     env.t0 = t0
 
-    XS  = np.zeros([int(t_max/dt), 13])
-    dts = [None] * (int(t_max/dt))
 
     solver = ode(func)
     solver.set_integrator('dop853')
@@ -78,21 +76,35 @@ def main():
     solver.set_f_params((env, body))
 
 
+    log = []
+
+
     print("running...")
     i = 0
     while solver.successful() and solver.t < t_max:
         solver.integrate(solver.t + dt)
-        XS[i]  = solver.y
-        dts[i] = t0 + timedelta(seconds=solver.t)
+
+        v = SixDoF.from_values(solver.y)
+        t = t0 + timedelta(seconds=solver.t)
+
+        step = np.concatenate([[t], v.X])
+        log.append(step)
+
+        if ecef2llh(eci2ecef(v.X, t))[2] < 0:
+            print("landed at {0:%H:%M:%S:%f}".format(t))
+            break
+
         i += 1
+
+    log = np.array(log)
 
     print("finished.")
 
     # sol = odeint(func, s0.to_values(), ts, args=(env, body))
 
+    XSeci  = (log[:, 1:4]).T
 
-    XSeci  = XS[:, 0:3].T
-    XSecef = eci2ecef(XSeci, dts)
+    XSecef = eci2ecef(XSeci, log[:, 0])
     # XSenu = XSecef
     XSenu  = ecef2enu(XSecef, X0llh)
 
