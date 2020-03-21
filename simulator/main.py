@@ -4,6 +4,7 @@ from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 from scipy.spatial.transform import Rotation as R
 from mpl_toolkits.mplot3d import Axes3D
+import astropy.time as at
 
 from simulator.basic       import *
 from simulator.coordinate  import *
@@ -28,7 +29,7 @@ def main():
     X0llh = vec3(np.radians(35.7058879), np.radians(139.7060483), 0)
     X0eci = ecef2eci(llh2ecef(X0llh), t0)
 
-    V0aer = vec3(np.radians(0), np.radians(70), 100)
+    V0aer = vec3(np.radians(45), np.radians(80), 100)
     V0eci = v_ecef2eci(v_aer2ecef(V0aer, X0llh), t0, X0eci)
 
     s0 = sixDoF(X0eci, V0eci, r0, v0)
@@ -36,12 +37,10 @@ def main():
     engine = Engine()
 
     t_max = 20
-    t_step = 0.1
+    t_step = 0.01
 
     ts = np.arange(0, t_max, t_step)
     dts = list(map(lambda t: t0 + timedelta(seconds=t), ts.tolist()))
-
-    # print(list(map (lambda t: t.strftime('%Y-%m-%dT%H:%M:%S.%f%z') ,dts)))
 
     env = Environment()
 
@@ -50,8 +49,8 @@ def main():
 
     XSeci  = sol[:, 0:3].T
     XSecef = eci2ecef(XSeci, dts)
-    # XSenu = XSecef
     XSenu  = ecef2enu(XSecef, X0llh)
+
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')

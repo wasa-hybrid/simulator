@@ -1,4 +1,20 @@
 [[package]]
+category = "main"
+description = "Community-developed python astronomy tools"
+name = "astropy"
+optional = false
+python-versions = ">=3.6"
+version = "4.0"
+
+[package.dependencies]
+numpy = ">=1.16"
+
+[package.extras]
+all = ["scipy", "h5py", "beautifulsoup4", "html5lib", "bleach", "pyyaml", "pandas", "sortedcontainers", "pytz", "jplephem", "matplotlib (>=2.1)", "scikit-image", "mpmath", "asdf (>=2.3)", "bottleneck", "ipython", "pytest"]
+docs = ["sphinx-astropy", "pytest", "pyyaml", "scipy", "scikit-image"]
+test = ["pytest-astropy", "pytest-xdist", "pytest-mpl", "objgraph", "ipython", "coverage", "skyfield"]
+
+[[package]]
 category = "dev"
 description = "Atomic file writes."
 marker = "sys_platform == \"win32\""
@@ -216,10 +232,28 @@ python-versions = "*"
 version = "0.1.8"
 
 [metadata]
-content-hash = "78be607c38b0bf493cc9b7636561f8ed20f929d3255aac7ffa9ae738de12b7dd"
+content-hash = "6ac40943255657afaac33fce73cc91b9b6cc6ac14f7cf0d622bd152fef0a76b2"
 python-versions = "^3.8"
 
 [metadata.files]
+astropy = [
+    {file = "astropy-4.0-cp36-cp36m-macosx_10_6_intel.whl", hash = "sha256:2b6ed8d7d4043587af62a55783f58d0d62e0e8217749c4cff721e727635dfa96"},
+    {file = "astropy-4.0-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:472d2f8b89dd486fa4912c6885191b1774b49ed566070cdf05920487d366a181"},
+    {file = "astropy-4.0-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:b48ff0af8b784db295aae9d21b73d898d0f2f888868d8f68f0ecb08a7438a3ec"},
+    {file = "astropy-4.0-cp36-cp36m-win32.whl", hash = "sha256:03de1a963b7f0efba367db88529946c6fab54caca3eb9448337f6b6c8e139c48"},
+    {file = "astropy-4.0-cp36-cp36m-win_amd64.whl", hash = "sha256:395523140c8f117d6625339677b7af8c1ff5b37d78f60f0a8a94c13d8f3a6e69"},
+    {file = "astropy-4.0-cp37-cp37m-macosx_10_6_intel.whl", hash = "sha256:ba866b243c47f1a34efe43b8e6d0e8d2630353399530e1267135d00068526283"},
+    {file = "astropy-4.0-cp37-cp37m-manylinux1_i686.whl", hash = "sha256:12feff9d55bb2e9aaf9b5724acac146244b8defc448e59d734a61a8bedb10bb8"},
+    {file = "astropy-4.0-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:c7ab6aa080085cd0f5ed8b2734240234dd72a712c706f9de7e248b899e2ed76d"},
+    {file = "astropy-4.0-cp37-cp37m-win32.whl", hash = "sha256:09ae780bc7e330af2394b04a43ee6fecb6c12887c62c067ee3d411dd62cc0c34"},
+    {file = "astropy-4.0-cp37-cp37m-win_amd64.whl", hash = "sha256:24595c4d45d088c74ebd5c57837a847c3dbe3a70b2940b045f95fd0382dc8237"},
+    {file = "astropy-4.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:0c2126668ae586cbbc8114e205f11cabf77c17cf77c9f5a98e79d9233cf809d5"},
+    {file = "astropy-4.0-cp38-cp38-manylinux1_i686.whl", hash = "sha256:2e427628c784fd76712cf717591ff94beb9c0d31e54f29b293d5a8111cd43c97"},
+    {file = "astropy-4.0-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:5d0615fdc11ab3446db7e1e8acb8400cbf5e7f5da6208a317de81f96f8a31402"},
+    {file = "astropy-4.0-cp38-cp38-win32.whl", hash = "sha256:e0b3e1bcb6848c9587734c8c1abcc3b7d5ae6239081ee7e49440b2f83f2de9c8"},
+    {file = "astropy-4.0-cp38-cp38-win_amd64.whl", hash = "sha256:a973eaeb4667a391bc6f52ddc18ac4ea7d93af3a8cf31a9f5987abcde1f4241b"},
+    {file = "astropy-4.0.tar.gz", hash = "sha256:404200e0baa84de09ac563ad9ccab3817e9b9669d0025cee74a8752f4bc2771b"},
+]
 atomicwrites = [
     {file = "atomicwrites-1.3.0-py2.py3-none-any.whl", hash = "sha256:03472c30eb2c5d1ba9227e4c2ca66ab8287fbfbbda3888aa93dc2e28fc6811b4"},
     {file = "atomicwrites-1.3.0.tar.gz", hash = "sha256:75a9445bac02d8d058d5e1fe689654ba5a6556a1dfd8ce6ec55a0ed79866cfa6"},

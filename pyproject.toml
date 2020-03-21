@@ -11,6 +11,7 @@ scipy = "^1.4.1"
 matplotlib = "^3.2.1"
 numpy = "^1.18.2"
 pymap3d = "^2.3.0"
+astropy = "^4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
