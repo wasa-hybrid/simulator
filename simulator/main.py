@@ -9,17 +9,26 @@ import astropy.time as at
 from simulator.basic       import *
 from simulator.coordinate  import *
 from simulator.environment import *
+from simulator.parts       import *
 from simulator.engine      import *
 
-def func(s, t, env):
-    Xeci, Veci, theta, omega = asSixDoF(s)
+def func(s, ti: float, env: Environment, body: Part):
+    t = env.time(ti)
+    S = SixDoF.from_values(s)
+    Xeci  = S.X
+    Veci  = S.V
+    theta = S.theta
+    omega = S.omega
 
+    Sbody = S
 
-    g = 9.80665
+    q = body.at(t, env)
 
-    dVdt = env.gravity(Xeci)
+    # print(body2eci(q.F / q.m, theta, v0, t))
+    # dVdt = body2eci(q.F / q.m, theta, v0, t) + env.gravity(Xeci)
+    dVdt = a_body2eci(q.F / q.m, theta, t) + env.gravity(Xeci)
     domegadt = v0
-    return sixDoFdt(Veci, dVdt, theta, omega, domegadt)
+    return SixDoF.dt(Veci, dVdt, theta, omega, domegadt)
 
 def main():
     print("WASA Rocket Simulator\n")
@@ -29,26 +38,42 @@ def main():
     X0llh = vec3(np.radians(35.7058879), np.radians(139.7060483), 0)
     X0eci = ecef2eci(llh2ecef(X0llh), t0)
 
-    V0aer = vec3(np.radians(45), np.radians(80), 100)
+    V0aer = vec3(np.radians(45), np.radians(60), 100)
     V0eci = v_ecef2eci(v_aer2ecef(V0aer, X0llh), t0, X0eci)
 
-    s0 = sixDoF(X0eci, V0eci, r0, v0)
+
+    R0ned = R.from_euler('y', np.radians(110))
+
+    R0 = R0ned
+    print(R0.as_rotvec())
+    print('n', r_ned2ecef(R0ned, X0llh).as_rotvec())
+    R0    = r_ecef2eci(r_ned2ecef(R0ned, X0llh), t0)
+    print(R0.as_rotvec())
+
+    s0 = SixDoF(X0eci, V0eci, R0, v0)
 
     engine = Engine()
+    engine.thrust = 70
+    engine.mass = 0.5
+    engine.setBurn(t0 + timedelta(seconds=1), 1)
 
-    t_max = 20
-    t_step = 0.01
+    body = engine
 
-    ts = np.arange(0, t_max, t_step)
+    t_max = 40.0
+    t_step = 0.1
+
+    ts = np.arange(0.0, t_max, t_step)
     dts = list(map(lambda t: t0 + timedelta(seconds=t), ts.tolist()))
 
-    env = Environment()
+    env    = Environment()
+    env.t0 = t0
 
-    sol = odeint(func, s0, ts, args=(env,))
+    sol = odeint(func, s0.to_values(), ts, args=(env, body))
 
 
     XSeci  = sol[:, 0:3].T
     XSecef = eci2ecef(XSeci, dts)
+    # XSenu = XSecef
     XSenu  = ecef2enu(XSecef, X0llh)
 
 
