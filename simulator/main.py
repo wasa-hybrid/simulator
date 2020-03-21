@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 import numpy as np
-from scipy.integrate import odeint
+from scipy.integrate import ode
 import matplotlib.pyplot as plt
 from scipy.spatial.transform import Rotation as R
 from mpl_toolkits.mplot3d import Axes3D
@@ -12,7 +12,8 @@ from simulator.environment import *
 from simulator.parts       import *
 from simulator.engine      import *
 
-def func(s, ti: float, env: Environment, body: Part):
+def func(ti: float, s, args):
+    env, body = args
     t = env.time(ti)
     S = SixDoF.from_values(s)
     Xeci  = S.X
@@ -38,11 +39,11 @@ def main():
     X0llh = vec3(np.radians(35.7058879), np.radians(139.7060483), 0)
     X0eci = ecef2eci(llh2ecef(X0llh), t0)
 
-    V0aer = vec3(np.radians(45), np.radians(60), 100)
+    V0aer = vec3(np.radians(30), np.radians(70), 100)
     V0eci = v_ecef2eci(v_aer2ecef(V0aer, X0llh), t0, X0eci)
 
 
-    R0ned = R.from_euler('y', np.radians(110))
+    R0ned = R.from_euler('y', np.radians(120))
 
     R0 = R0ned
     print(R0.as_rotvec())
@@ -53,25 +54,44 @@ def main():
     s0 = SixDoF(X0eci, V0eci, R0, v0)
 
     engine = Engine()
-    engine.thrust = 70
+    engine.thrust = 40
     engine.mass = 0.5
-    engine.setBurn(t0 + timedelta(seconds=1), 1)
+    engine.setBurn(t0 + timedelta(seconds=4), 2)
 
     body = engine
 
     t_max = 40.0
-    t_step = 0.1
+    dt = 0.1
 
-    ts = np.arange(0.0, t_max, t_step)
-    dts = list(map(lambda t: t0 + timedelta(seconds=t), ts.tolist()))
+    # ts = np.arange(0.0, t_max, dt)
+    # dts = list(map(lambda t: t0 + timedelta(seconds=t), ts.tolist()))
 
     env    = Environment()
     env.t0 = t0
 
-    sol = odeint(func, s0.to_values(), ts, args=(env, body))
+    XS  = np.zeros([int(t_max/dt), 13])
+    dts = [None] * (int(t_max/dt))
+
+    solver = ode(func)
+    solver.set_integrator('dop853')
+    solver.set_initial_value(s0.to_values())
+    solver.set_f_params((env, body))
 
 
-    XSeci  = sol[:, 0:3].T
+    print("running...")
+    i = 0
+    while solver.successful() and solver.t < t_max:
+        solver.integrate(solver.t + dt)
+        XS[i]  = solver.y
+        dts[i] = t0 + timedelta(seconds=solver.t)
+        i += 1
+
+    print("finished.")
+
+    # sol = odeint(func, s0.to_values(), ts, args=(env, body))
+
+
+    XSeci  = XS[:, 0:3].T
     XSecef = eci2ecef(XSeci, dts)
     # XSenu = XSecef
     XSenu  = ecef2enu(XSecef, X0llh)
