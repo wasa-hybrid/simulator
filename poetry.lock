@@ -124,6 +124,20 @@ version = "1.8.1"
 
 [[package]]
 category = "main"
+description = "pure Python (no prereqs) coordinate conversions, following convention of several popular Matlab routines."
+name = "pymap3d"
+optional = false
+python-versions = ">=3.5.2"
+version = "2.3.0"
+
+[package.extras]
+full = ["python-dateutil", "numpy (>=1.10.0)", "astropy", "xarray"]
+lint = ["flake8", "flake8-bugbear", "flake8-builtins", "flake8-blind-except", "mypy"]
+testproj = ["pyproj"]
+tests = ["pytest"]
+
+[[package]]
+category = "main"
 description = "Python parsing module"
 name = "pyparsing"
 optional = false
@@ -202,7 +216,7 @@ python-versions = "*"
 version = "0.1.8"
 
 [metadata]
-content-hash = "fe1397b133bbeb4bc86a9627869cb0c79cffb928c55dad5f6aeaa8cb48385d8b"
+content-hash = "78be607c38b0bf493cc9b7636561f8ed20f929d3255aac7ffa9ae738de12b7dd"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -318,6 +332,9 @@ pluggy = [
 py = [
     {file = "py-1.8.1-py2.py3-none-any.whl", hash = "sha256:c20fdd83a5dbc0af9efd622bee9a5564e278f6380fffcacc43ba6f43db2813b0"},
     {file = "py-1.8.1.tar.gz", hash = "sha256:5e27081401262157467ad6e7f851b7aa402c5852dbcb3dae06768434de5752aa"},
+]
+pymap3d = [
+    {file = "pymap3d-2.3.0.tar.gz", hash = "sha256:93c0b63c5644fd23a54b53f14643ffe643f5cb5702f3d095b93ba3b9f51975b6"},
 ]
 pyparsing = [
     {file = "pyparsing-2.4.6-py2.py3-none-any.whl", hash = "sha256:c342dccb5250c08d45fd6f8b4a559613ca603b57498511740e65cd11a2e7dcec"},
