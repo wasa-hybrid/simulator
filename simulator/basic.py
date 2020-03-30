@@ -1,13 +1,13 @@
-from typing import TypeVar, Type
+from typing import TypeVar, Type, Union
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
 def vec3(x: float, y: float, z: float):
     return np.array([x, y, z])
 
-V3 = np.ndarray
+V3 = Union[np.ndarray]
 
-T3 = np.ndarray
+T3 = Union[np.ndarray]
 
 # def sixDoF(x: V3, v: V3, theta: R, omega: V3):
 #     return np.concatenate([x, v, theta.as_quat(), omega])

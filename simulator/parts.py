@@ -10,6 +10,5 @@ class Part(metaclass=ABCMeta):
     origin: V3 = v0
 
     @abstractmethod
-    def at(self, t: datetime, env: Environment, *args,
-           Vbody: V3) -> Q:
+    def at(self, t: datetime, env: Environment, *args) -> Q:
         pass

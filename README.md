@@ -10,3 +10,5 @@
     poetry install
 ### 実行
     poetry run main
+### 型検査
+    poetry run mypy simulator
